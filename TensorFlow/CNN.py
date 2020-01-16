@@ -10,6 +10,7 @@ def compute_accuracy(x_xs, y_ys):
     correct_prediction = tf.equal(tf.arg_max(y_ys, 1), tf.argmax(y_pre, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     result = sess.run(accuracy, feed_dict={xs: x_xs, ys: y_ys, keep_prob: 1})
+    return result
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
@@ -22,11 +23,13 @@ def bias_variable(shape):
 def conv2d(x, W):
     # stride [1, x_movement, y_movement, 1]
     # Must have strides[0] = strides[3] = 1
+    #SAME填充，VALID删除
     return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
 def max_pool_2x2(x):
     # stride [1, x_movement, y_movement, 1]
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+
 
 xs = tf.placeholder(tf.float32, [None, 784]) / 255
 ys = tf.placeholder(tf.float32, [None, 10])
@@ -67,9 +70,10 @@ with tf.device('/job:localhost/replica:0/task:0/device:GPU:0'):
     sess = tf.Session()
     init = tf.global_variables_initializer()
     sess.run(init)
-    for i in range(1000):
+    for i in range(90000):
         batch_xs, batch_ys = mnist.train.next_batch(100)
         sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})
-        if i % 50 == 0:
+        if i % 10 == 0:
+            # print(mnist.test.images[:1000], mnist.test.labels[:1000])
             print(compute_accuracy(mnist.test.images[:1000], mnist.test.labels[:1000]))
 

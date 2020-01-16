@@ -33,7 +33,9 @@ def next_url(url):
 
 def resolve(url):
     soup = parse(url)
+
     res = soup.find(id="content").get_text()
+    print(res)
     find_title = re.compile(r'<h1>(.*)</h1>')
     title = find_title.findall((str(soup)))
     res = res.replace('请记住本书首发域名：www.022003.com。VIP中文_笔趣阁手机版阅读网址：m.022003.com', '')
@@ -46,5 +48,6 @@ def download(url):
             f.write(resolve(url))
         url = 'http://www.022003.com' + next_url(url)
 
-download(url)
+resolve(url)
+# download(url)
 # next_url(url)
