@@ -24,6 +24,14 @@ def newton_sqrt(a):
         start = end
         end = (start + a / start) / 2
         print(count, start, end)
+def w_newton_sqrt(a):
+    start = a
+    count = 0
+    while(abs(start**2 - a) > 1e-5):
+        start = (start + a / start)/2
+        count += 1
+        print(count, start)
 if __name__ == '__main__':
     w_sqrt(11)
     newton_sqrt(11)
+    w_newton_sqrt(11)
